@@ -1,7 +1,15 @@
 import React, { useState } from 'react'
 
+const Anecdote = (props) => (
+  <p> {props.anecdote}</p>
+)
+
 const Button = (props) => (
   <button onClick = {props.handleFunction}> {props.text} </button>
+)
+
+const Heading = (props) => (
+  <h1> {props.text} </h1>
 )
 
 const App = () => {
@@ -15,21 +23,33 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
 
-  const handleClick = () => {
+  const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+  const handleRandom = () => {
     const anecdoteIndex = Math.floor(Math.random() * (anecdotes.length))
     setSelected(anecdoteIndex)
   }
 
-  const [selected, setSelected] = useState(0)
+  const handleVote = () => {
+    // DIDN'T SEE THE TIP FOR UPDATING THE ARRAY POSITION VALUE LOL
+    const newVotes = votes.slice(0,selected).concat(votes[selected] + 1).concat(votes.slice(selected + 1))
+    setVotes(newVotes)
+  }
 
   return (
     <div>
+      <Heading text = 'Anecdote of the day'/>
+      <Anecdote anecdote = {anecdotes[selected]}/>
+      <p>
+        has {votes[selected]} votes
+      </p>
       <div>
-        {anecdotes[selected]}
+        <Button text = "vote" handleFunction = {handleVote}/>
+        <Button text = "next anecdote" handleFunction = {handleRandom}/>
       </div>
-      <div>
-        <Button text = "next anecdote" handleFunction = {handleClick}/>
-      </div>
+      <Heading text = 'Anecdote with most votes'/>
+      <Anecdote anecdote = {anecdotes[votes.indexOf(Math.max.apply(null,votes))]}/>
     </div>
   )
 }
