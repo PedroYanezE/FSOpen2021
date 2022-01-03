@@ -9,10 +9,38 @@ const Button = (props) => (
 )
 
 const Statistics = (props) => {
-  return(
-    <p> {props.text} {props.value}</p>
-  )
+  const qty = props.good + props.neutral + props.bad
+  if(qty)
+    return(
+      <div>
+        <table>
+          <tbody>
+            <StatisticLine text = "good" value = {props.good}/>
+            <StatisticLine text = "neutral" value = {props.neutral}/>
+            <StatisticLine text = "bad" value = {props.bad}/>
+            <StatisticLine text = "all" value = {qty}/>
+            <StatisticLine text = "average" value = {(props.good - props.bad)/qty}/>
+            <StatisticLine text = "positive" value = {100*(props.good/qty)}/>
+          </tbody>
+        </table>
+      </div>
+    )
+  else
+    return(
+      <p> No feedback given </p>
+    )
 }
+
+const StatisticLine = (props) => (
+  <tr>
+    <td>
+      {props.text}
+    </td>
+    <td>
+     {props.value}
+    </td>
+  </tr>
+)
 
 const App = () => {
   const [good, setGood] = useState(0)
@@ -31,39 +59,19 @@ const App = () => {
     setBad(bad + 1)
   }
 
-  if (good + neutral + bad)
-    return(
-      <div>
-        <Heading text = "give feedback"/>
+  return(
+    <div>
+      <Heading text = "give feedback"/>
 
-        <Button handleFunction = {handleGood} text = "good"/>
-        <Button handleFunction = {handleNeutral} text = "neutral"/>
-        <Button handleFunction = {handleBad} text = "bad"/>
+      <Button text = "good" handleFunction = {handleGood}/>
+      <Button text = "neutral" handleFunction = {handleNeutral}/>
+      <Button text = "bad" handleFunction = {handleBad}/>
 
-        <Heading text = "statistics"/>
+      <Heading text = "statistics"/>
 
-        <Statistics text = "good" value = {good}/>
-        <Statistics text = "neutral" value = {neutral}/>
-        <Statistics text = "bad" value = {bad}/>
-        <Statistics text = "all" value = {good + neutral + bad}/>
-        <Statistics text = "average" value = {(good - bad)/(good + bad + neutral)}/>
-        <Statistics text = "positive" value = {((good)/(good + bad + neutral)) * 100}/>
-      </div>
+      <Statistics good = {good} neutral = {neutral} bad = {bad}/>
+    </div>
   )
-  else 
-    return(
-      <div>
-        <Heading text = "give feedback"/>
-
-        <Button handleFunction = {handleGood} text = "good"/>
-        <Button handleFunction = {handleNeutral} text = "neutral"/>
-        <Button handleFunction = {handleBad} text = "bad"/>
-
-        <Heading text = "statistics"/>
-
-        <p>No feedback given</p>
-      </div>
-    )
 }
 
 export default App;
